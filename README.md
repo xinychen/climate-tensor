@@ -7,25 +7,56 @@ pip install GDAL
 ```
 
 ```python
+import numpy as np
 from osgeo import gdal
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
 
-dataset = gdal.Open(r'wv_mcd19a2v061.seasconv.m.m01_p50_1km_s_20000101_20221231_go_epsg.4326_v20230619.tif')
-
-band = dataset.GetRasterBand(1)
-
-b = np.array(band.ReadAsArray()[4500 : 8000,
-                                6600 : 13100]).astype(float)
-
-b[b == -1] = np.nan
-
-f = plt.figure(figsize = (6.5, 3))
-# plt.imshow(b)
-sns.heatmap(b, cmap = "Spectral_r", vmin = 0, vmax = 3000)
-
-plt.axis('off')
-plt.savefig('water_vapor_na.png')
+fig = plt.figure(figsize = (14, 3))
+i = 0
+for month in [5, 6]:
+    dataset = gdal.Open(r'wv_mcd19a2v061.seasconv.m.m0{}_p50_1km_s_20000101_20221231_go_epsg.4326_v20230619.tif'.format(month))
+    mat = np.array(dataset.GetRasterBand(1).ReadAsArray()[4500 : 8000, 6600 : 13100]).astype(float)
+    mat[mat == -1] = np.nan
+    ax = fig.add_subplot(1, 2, i + 1)
+    ax = sns.heatmap(mat,  cmap = "Spectral_r", vmin = 0, vmax = 4500,
+                     cbar_kws = {"shrink": 0.5, 'label': r'Water vapor ($10^{-3}$cm)'})
+    plt.axis('off')
+    if month == 5:
+        plt.title('May (2000-2022)')
+    elif month == 6:
+        plt.title('June (2000-2022)')
+    i += 1
 plt.show()
 ```
+
+```python
+import numpy as np
+from osgeo import gdal
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+dataset = gdal.Open(r'wv_mcd19a2v061.seasconv.m.m06_p50_1km_s_20000101_20221231_go_epsg.4326_v20230619.tif')
+mat = np.array(dataset.GetRasterBand(1).ReadAsArray()[4500 : 8000, 6600 : 13100]).astype(float)
+mat[mat == -1] = np.nan
+fig = plt.figure(figsize = (6.5, 3))
+ax = sns.heatmap(mat,  cmap = "Spectral_r", vmin = 0, vmax = 4500,
+                  cbar_kws = {"shrink": 0.5, 'label': r'Water vapor ($10^{-3}$cm)'})
+plt.axis('off')
+plt.title('June (2000-2022)')
+plt.show()
+```
+
+```python
+import numpy as np
+from osgeo import gdal
+
+for i in ['01', '02', '03', '04', '05', '06',
+          '07', '08', '09', '10', '11', '12']:
+    dataset = gdal.Open(r'wv_mcd19a2v061.seasconv.m.m{}_p50_1km_s_20000101_20221231_go_epsg.4326_v20230619.tif'.format(i))
+    mat = np.array(dataset.GetRasterBand(1).ReadAsArray()[4500 : 8000, 6600 : 13100]).astype(float)
+    mat[mat == -1] = np.nan
+    np.savez_compressed('water_vapor_month_{}.npz'.format(i), mat)
+```
+
+
