@@ -22,8 +22,8 @@ b = np.array(band.ReadAsArray()[4500 : 8000,
 b[b == -1] = np.nan
 
 f = plt.figure(figsize = (6.5, 3))
-# plt.imshow(b1)
-sns.heatmap(b1, cmap = "Spectral_r", vmin = 0, vmax = 3000)
+# plt.imshow(b)
+sns.heatmap(b, cmap = "Spectral_r", vmin = 0, vmax = 3000)
 
 plt.axis('off')
 plt.savefig('water_vapor_na.png')
