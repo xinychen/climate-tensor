@@ -59,4 +59,23 @@ for i in ['01', '02', '03', '04', '05', '06',
     np.savez_compressed('water_vapor_month_{}.npz'.format(i), mat)
 ```
 
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+fig = plt.figure(figsize = (14, 3))
+i = 0
+for month in [5, 6]:
+    mat = np.load('water_vapor_month_0{}.npz'.format(month))['arr_0']
+    ax = fig.add_subplot(1, 2, i + 1)
+    ax = sns.heatmap(mat,  cmap = "Spectral_r", vmin = 0, vmax = 4500,
+                     cbar_kws = {"shrink": 0.5, 'label': r'Water vapor ($10^{-3}$cm)'})
+    plt.axis('off')
+    if month == 5:
+        plt.title('May (2000-2022)')
+    elif month == 6:
+        plt.title('June (2000-2022)')
+    i += 1
+plt.show()
+```
 
