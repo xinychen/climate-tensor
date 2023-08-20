@@ -1,4 +1,4 @@
-# Short Climate Variable Forecasting
+# Climate Variable Data & Visualization
 
 Data source: [Monthly aggregated Water Vapor MODIS MCD19A2 (1 km): Long-term data (2000-2022)](https://doi.org/10.5281/zenodo.8193024)
 
