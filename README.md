@@ -79,3 +79,13 @@ for month in [5, 6]:
 plt.show()
 ```
 
+```python
+def resolute(mat):
+    a, b = mat.shape
+    a1 = int(a / 2)
+    b1 = int(b / 2)
+    mat1 = (mat[:: 2, :: 2] + mat[:: 2, 1 :: 2] 
+            + mat[1 :: 2, :: 2] + mat[1 :: 2, 1 :: 2])
+    return mat1
+```
+
