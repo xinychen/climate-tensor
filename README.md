@@ -87,5 +87,26 @@ def resolute(mat):
     mat1 = (mat[:: 2, :: 2] + mat[:: 2, 1 :: 2] 
             + mat[1 :: 2, :: 2] + mat[1 :: 2, 1 :: 2])
     return mat1
+
+M, N = resolute(np.load('water_vapor_month_01.npz')['arr_0']).shape
+tensor = np.zeros((M * N, 12))
+for month in range(12):
+    if month + 1 < 10:
+        tensor[:, month] = resolute(np.load('water_vapor_month_0{}.npz'.format(month + 1))['arr_0']).reshape([M * N], order = 'F')
+    else:
+        tensor[:, month] = resolute(np.load('water_vapor_month_{}.npz'.format(month + 1))['arr_0']).reshape([M * N], order = 'F')
+ind = np.where(~np.isnan(tensor[:, 0]))
+a = ind[0].shape[0]
+mat = np.zeros((a, 12))
+for month in range(12):
+    mat[:, month] = tensor[ind[0], month]
+del tensor
+
+tensor_hat = np.zeros((M, N, 4))
+for month in range(12):
+    temp = np.empty(M * N)
+    temp[:] = np.nan
+    temp[ind[:]] = mat[:, month]
+    tensor_hat[:, :, month] = temp.reshape([M, N], order = 'F')
 ```
 
